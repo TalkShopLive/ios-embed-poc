@@ -102,60 +102,17 @@ class WebviewController: UIViewController, WKNavigationDelegate {
 }
 
 struct ContentView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @State private var isShowingWebView: Bool = false
-    @State private var showSheet = false
-    @State private var inputUrlLive: String = EMBED_URL_LIVE
-    @State private var inputUrlStaging: String = EMBED_URL
+    // @Environment(\.colorScheme) var colorScheme
+    @State var isShowingWebView: Bool = false
+    @State var showSheet = false
+    @State var inputUrlLive: String = EMBED_URL_LIVE
+    @State var inputUrlStaging: String = EMBED_URL
         
         var body: some View {
             NavigationView {
                 VStack {
-                    Text("Live Mode").padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0)).fontWeight(.bold)
-                    TextField("Enter URL", text: $inputUrlLive)
-                    // Make sure no other style is mistakenly applied.
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        // Text alignment.
-                        .multilineTextAlignment(.leading)
-                        // Text/placeholder font.
-                        .font(.title3.weight(.medium))
-                        // TextField spacing.
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 16)
-                        // TextField border.
-                        //.background(border)
-                    //
-                    // 1). --> Modal
-                    //
-                    Button(action: {
-                        isShowingWebView = true
-                    })
-                    {
-                        Text("Live Embed - Modal")
-                    }
-                    .sheet(isPresented: $isShowingWebView) {
-                        // Open url
-                        Webview(url: URL(string: inputUrlLive)!)
-                    }.buttonStyle(.borderedProminent)
-                    
-                    //
-                    // 2). --> Full Modal
-                    //
-                    Button("Live Embed - Full Modal") {
-                        showSheet = true
-                    }.fullScreenCover(isPresented: $showSheet) {
-                        SheetView(inputUrl: $inputUrlLive)
-                    }.buttonStyle(.borderedProminent)
-                    
-                    //
-                    // 3). --> New Screen
-                    //
-                    NavigationLink(destination: ScreenView(inputUrl: $inputUrlLive)) {
-                                        Text("Live Embed - New Screen")
-                    }.buttonStyle(.borderedProminent)
-                    
                     // Dev Buttons
-                    Text("Dev Mode").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                    Text("Dev Mode").padding(EdgeInsets(top: 00, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
                     TextField("Enter URL", text: $inputUrlStaging)
                     // Make sure no other style is mistakenly applied.
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -197,7 +154,14 @@ struct ContentView: View {
                     NavigationLink(destination: ScreenViewDev(inputUrl: $inputUrlStaging)) {
                                         Text("Dev Embed - New Screen")
                     }.buttonStyle(.borderedProminent)
-                }.font(.title2).navigationBarTitle(Text("TSL Embed POC").font(.title3), displayMode: .large)
+                    
+                    
+                    Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                    
+                    NavigationLink(destination: ScreenView()) {
+                                        Text("Swicth to Live mode")
+                    }.buttonStyle(.borderedProminent)
+                }.font(.title2).navigationBarTitle(Text("TSL Embed POC").font(.title3), displayMode: .inline)
                     .navigationBarHidden(false)
             }
         }
@@ -206,12 +170,12 @@ struct ContentView: View {
 
 struct SheetView: View {
  @Environment(\.presentationMode) var presentationMode
-    @Binding var inputUrl: String
+    @Binding var inputUrlLive: String
 
   var body: some View {
       ZStack {
           // Open url
-          Webview(url: URL(string:inputUrl)!)
+          Webview(url: URL(string:inputUrlLive)!)
           
           Button {
              presentationMode.wrappedValue.dismiss()
@@ -258,6 +222,70 @@ struct SheetViewDev: View {
 
 // New Screen Live
 struct ScreenView : View {
+    @Environment(\.presentationMode) var presentationMode
+    @State var isShowingWebView: Bool = false
+    @State var showSheet = false
+    @State var inputUrlLive: String = EMBED_URL_LIVE
+    @State var inputUrlStaging: String = EMBED_URL
+    
+        var body: some View {
+            VStack {
+                Text("Live Mode").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                TextField("Enter URL", text: $inputUrlLive)
+                // Make sure no other style is mistakenly applied.
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    // Text alignment.
+                    .multilineTextAlignment(.leading)
+                    // Text/placeholder font.
+                    .font(.title3.weight(.medium))
+                    // TextField spacing.
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16)
+                    // TextField border.
+                    //.background(border)
+                //
+                // 1). --> Modal
+                //
+                Button(action: {
+                    isShowingWebView = true
+                })
+                {
+                    Text("Live Embed - Modal")
+                }
+                .sheet(isPresented: $isShowingWebView) {
+                    // Open url
+                    Webview(url: URL(string: inputUrlLive)!)
+                }.buttonStyle(.borderedProminent)
+                
+                //
+                // 2). --> Full Modal
+                //
+                Button("Live Embed - Full Modal") {
+                    showSheet = true
+                }.fullScreenCover(isPresented: $showSheet) {
+                    SheetView(inputUrlLive: $inputUrlLive)
+                }.buttonStyle(.borderedProminent)
+                
+                //
+                // 3). --> New Screen
+                //
+                NavigationLink(destination: ScreenViewLive(inputUrl: $inputUrlLive)) {
+                                    Text("Live Embed - New Screen")
+                }.buttonStyle(.borderedProminent)
+                
+                
+                Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                
+                Button("Swicth to Dev Mode") {
+                    presentationMode.wrappedValue.dismiss()
+                }.buttonStyle(.borderedProminent)
+            }.font(.title2).navigationBarTitle(Text("").font(.title3), displayMode: .inline)
+                .navigationBarHidden(true)
+        }
+    }
+
+// New Screen Live
+struct ScreenViewLive : View {
     @Binding var inputUrl: String
         var body: some View {
             NavigationView {
