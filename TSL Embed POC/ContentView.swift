@@ -7,12 +7,11 @@
 import WebKit
 import SwiftUI
 
-// let EMBED_URL = "https://talkshop.live/watch/wtGJSC-21esf"
-let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&type=show&modus=JyC00f6tVJv0&index=Ypcjmg3lv&view=default&r=1&theme=light"
-let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&type=show&modus=5Cn81MRw51ct&index=Ypcjmg3lv&view=default&r=1&theme=light"
+let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&type=show&modus=JyC00f6tVJv0&index=JyC00f6tVJv0theme=light"
+let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&type=show&modus=5Cn81MRw51ct&index=JyC00f6tVJv0&theme=light"
 struct Webview: UIViewControllerRepresentable {
-    let url: URL
-
+    var url: URL
+    
     func makeUIViewController(context: Context) -> WebviewController {
         let webviewController = WebviewController()
 
@@ -103,10 +102,11 @@ class WebviewController: UIViewController, WKNavigationDelegate {
 }
 
 struct ContentView: View {
+    @Environment(\.colorScheme) var colorScheme
     @State private var isShowingWebView: Bool = false
     @State private var showSheet = false
-    @State private var inputUrl: String = EMBED_URL
     @State private var inputUrlLive: String = EMBED_URL_LIVE
+    @State private var inputUrlStaging: String = EMBED_URL
         
         var body: some View {
             NavigationView {
@@ -156,7 +156,7 @@ struct ContentView: View {
                     
                     // Dev Buttons
                     Text("Dev Mode").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
-                    TextField("Enter URL", text: $inputUrl)
+                    TextField("Enter URL", text: $inputUrlStaging)
                     // Make sure no other style is mistakenly applied.
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         // Text alignment.
@@ -179,7 +179,7 @@ struct ContentView: View {
                     }
                     .sheet(isPresented: $isShowingWebView) {
                         // Open url
-                        Webview(url: URL(string: inputUrl)!)
+                        Webview(url: URL(string: inputUrlStaging)!)
                     }.buttonStyle(.borderedProminent)
                     
                     //
@@ -188,13 +188,13 @@ struct ContentView: View {
                     Button("Dev Embed - Full Modal") {
                         showSheet = true
                     }.fullScreenCover(isPresented: $showSheet) {
-                        SheetView(inputUrl: $inputUrl)
+                        SheetViewDev(inputUrl: $inputUrlStaging)
                     }.buttonStyle(.borderedProminent)
                     
                     //
                     // 3). --> New Screen
                     //
-                    NavigationLink(destination: ScreenView(inputUrl: $inputUrl)) {
+                    NavigationLink(destination: ScreenViewDev(inputUrl: $inputUrlStaging)) {
                                         Text("Dev Embed - New Screen")
                     }.buttonStyle(.borderedProminent)
                 }.font(.title2).navigationBarTitle(Text("TSL Embed POC").font(.title3), displayMode: .large)
@@ -219,8 +219,10 @@ struct SheetView: View {
               Image(systemName: "xmark.circle")
                    .font(.title)
               .foregroundColor(.gray)
+              .background(.white)
               .backgroundStyle(.brown)
-              .position(x: 30, y: -15)
+              .cornerRadius(100)
+              .position(x: 30, y: 0)
            }
     }
      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
@@ -228,8 +230,48 @@ struct SheetView: View {
   }
 }
 
-// New Screen
+struct SheetViewDev: View {
+ @Environment(\.presentationMode) var presentationMode
+    @Binding var inputUrl: String
+
+  var body: some View {
+      ZStack {
+          // Open url
+          Webview(url: URL(string:inputUrl)!)
+          
+          Button {
+             presentationMode.wrappedValue.dismiss()
+           } label: {
+              Image(systemName: "xmark.circle")
+                   .font(.title)
+              .foregroundColor(.gray)
+              .background(.white)
+              .backgroundStyle(.brown)
+              .cornerRadius(100)
+              .position(x: 30, y: 0)
+           }
+    }
+     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+     .padding(0)
+  }
+}
+
+// New Screen Live
 struct ScreenView : View {
+    @Binding var inputUrl: String
+        var body: some View {
+            NavigationView {
+                VStack {
+                    // Open url
+                    Webview(url: URL(string:inputUrl)!)
+                }.navigationBarTitle("")
+                .navigationBarHidden(true)
+            }
+        }
+    }
+
+// New Screen Dev
+struct ScreenViewDev : View {
     @Binding var inputUrl: String
         var body: some View {
             NavigationView {
