@@ -132,7 +132,7 @@ struct ContentView: View {
                         isShowingWebView = true
                     })
                     {
-                        Text("Dev Embed - Modal")
+                        Text("Embed - Modal")
                     }
                     .sheet(isPresented: $isShowingWebView) {
                         // Open url
@@ -142,7 +142,7 @@ struct ContentView: View {
                     //
                     // 2). --> Full Modal
                     //
-                    Button("Dev Embed - Full Modal") {
+                    Button("Embed - Full Modal") {
                         showSheet = true
                     }.fullScreenCover(isPresented: $showSheet) {
                         SheetViewDev(inputUrl: $inputUrlStaging)
@@ -152,14 +152,14 @@ struct ContentView: View {
                     // 3). --> New Screen
                     //
                     NavigationLink(destination: ScreenViewDev(inputUrl: $inputUrlStaging)) {
-                                        Text("Dev Embed - New Screen")
+                                        Text("Embed - New Screen")
                     }.buttonStyle(.borderedProminent)
                     
                     
                     Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
                     
                     NavigationLink(destination: ScreenView()) {
-                                        Text("Swicth to Live mode")
+                                        Text("Switch to Live Mode")
                     }.buttonStyle(.borderedProminent)
                 }.font(.title2).navigationBarTitle(Text("TSL Embed POC").font(.title3), displayMode: .inline)
                     .navigationBarHidden(false)
@@ -250,7 +250,7 @@ struct ScreenView : View {
                     isShowingWebView = true
                 })
                 {
-                    Text("Live Embed - Modal")
+                    Text("Embed - Modal")
                 }
                 .sheet(isPresented: $isShowingWebView) {
                     // Open url
@@ -260,7 +260,7 @@ struct ScreenView : View {
                 //
                 // 2). --> Full Modal
                 //
-                Button("Live Embed - Full Modal") {
+                Button("Embed - Full Modal") {
                     showSheet = true
                 }.fullScreenCover(isPresented: $showSheet) {
                     SheetView(inputUrlLive: $inputUrlLive)
@@ -270,13 +270,13 @@ struct ScreenView : View {
                 // 3). --> New Screen
                 //
                 NavigationLink(destination: ScreenViewLive(inputUrl: $inputUrlLive)) {
-                                    Text("Live Embed - New Screen")
+                                    Text("Embed - New Screen")
                 }.buttonStyle(.borderedProminent)
                 
                 
                 Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
                 
-                Button("Swicth to Dev Mode") {
+                Button("Switch to Dev Mode") {
                     presentationMode.wrappedValue.dismiss()
                 }.buttonStyle(.borderedProminent)
             }.font(.title2).navigationBarTitle(Text("").font(.title3), displayMode: .inline)
