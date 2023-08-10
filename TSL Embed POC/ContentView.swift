@@ -7,8 +7,10 @@
 import WebKit
 import SwiftUI
 
-let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&type=show&modus=JyC00f6tVJv0&index=JyC00f6tVJv0theme=light"
-let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&type=show&modus=5Cn81MRw51ct&index=JyC00f6tVJv0&theme=light"
+let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&type=show&index=JyC00f6tVJv0&modus="
+let DEFAULT_EMBED_URL = EMBED_URL + "JyC00f6tVJv0"
+let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&type=show&index=JyC00f6tVJv0&modus="
+let DEFAULT_EMBED_URL_LIVE = EMBED_URL_LIVE + "5Cn81MRw51ct"
 struct Webview: UIViewControllerRepresentable {
     var url: URL
     
@@ -30,8 +32,6 @@ struct Webview: UIViewControllerRepresentable {
         //
     }
 }
-
-
 
 class WebviewController: UIViewController, WKNavigationDelegate {
     lazy var webview: WKWebView = WKWebView()
@@ -100,20 +100,22 @@ class WebviewController: UIViewController, WKNavigationDelegate {
         }
     }
 }
-
+// vzzg6tNu0qOv
 struct ContentView: View {
-    // @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorScheme) var colorScheme
     @State var isShowingWebView: Bool = false
     @State var showSheet = false
-    @State var inputUrlLive: String = EMBED_URL_LIVE
-    @State var inputUrlStaging: String = EMBED_URL
+    @State var fullURL: String = DEFAULT_EMBED_URL
+    @State var showID: String = ""
         
         var body: some View {
             NavigationView {
                 VStack {
                     // Dev Buttons
-                    Text("Dev Mode").padding(EdgeInsets(top: 00, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
-                    TextField("Enter URL", text: $inputUrlStaging)
+                    Text("Dev Mode").padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                    TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
+                        fullURL = "\(EMBED_URL)\(showID.isEmpty ? "JyC00f6tVJv0" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
+                    }
                     // Make sure no other style is mistakenly applied.
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         // Text alignment.
@@ -125,6 +127,7 @@ struct ContentView: View {
                         .padding(.horizontal, 16)
                         // TextField border.
                         //.background(border)
+                    // Text(fullURL)
                     //
                     // 1). --> Modal
                     //
@@ -136,7 +139,7 @@ struct ContentView: View {
                     }
                     .sheet(isPresented: $isShowingWebView) {
                         // Open url
-                        Webview(url: URL(string: inputUrlStaging)!)
+                        Webview(url: URL(string: fullURL)!)
                     }.buttonStyle(.borderedProminent)
                     
                     //
@@ -145,13 +148,13 @@ struct ContentView: View {
                     Button("Embed - Full Modal") {
                         showSheet = true
                     }.fullScreenCover(isPresented: $showSheet) {
-                        SheetViewDev(inputUrl: $inputUrlStaging)
+                        SheetViewDev(inputUrl: $fullURL)
                     }.buttonStyle(.borderedProminent)
                     
                     //
                     // 3). --> New Screen
                     //
-                    NavigationLink(destination: ScreenViewDev(inputUrl: $inputUrlStaging)) {
+                    NavigationLink(destination: ScreenViewDev(inputUrl: $fullURL)) {
                                         Text("Embed - New Screen")
                     }.buttonStyle(.borderedProminent)
                     
@@ -161,6 +164,10 @@ struct ContentView: View {
                     NavigationLink(destination: ScreenView()) {
                                         Text("Switch to Live Mode")
                     }.buttonStyle(.borderedProminent)
+                    
+                    VStack {
+                        Text("Full URL: \(fullURL)").font(.body)
+                    }.padding(20)
                 }.font(.title2).navigationBarTitle(Text("TSL Embed POC").font(.title3), displayMode: .inline)
                     .navigationBarHidden(false)
             }
@@ -220,18 +227,23 @@ struct SheetViewDev: View {
   }
 }
 
+// HdLWbc0zNk54
 // New Screen Live
 struct ScreenView : View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.presentationMode) var presentationMode
     @State var isShowingWebView: Bool = false
     @State var showSheet = false
-    @State var inputUrlLive: String = EMBED_URL_LIVE
-    @State var inputUrlStaging: String = EMBED_URL
     
+    @State var fullURL: String = DEFAULT_EMBED_URL_LIVE
+    @State var showID: String = ""
         var body: some View {
             VStack {
                 Text("Live Mode").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
-                TextField("Enter URL", text: $inputUrlLive)
+
+                TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
+                    fullURL = "\(EMBED_URL_LIVE)\(showID.isEmpty ? "5Cn81MRw51ct" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
+                }
                 // Make sure no other style is mistakenly applied.
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     // Text alignment.
@@ -254,7 +266,7 @@ struct ScreenView : View {
                 }
                 .sheet(isPresented: $isShowingWebView) {
                     // Open url
-                    Webview(url: URL(string: inputUrlLive)!)
+                    Webview(url: URL(string: fullURL)!)
                 }.buttonStyle(.borderedProminent)
                 
                 //
@@ -263,13 +275,13 @@ struct ScreenView : View {
                 Button("Embed - Full Modal") {
                     showSheet = true
                 }.fullScreenCover(isPresented: $showSheet) {
-                    SheetView(inputUrlLive: $inputUrlLive)
+                    SheetView(inputUrlLive: $fullURL)
                 }.buttonStyle(.borderedProminent)
                 
                 //
                 // 3). --> New Screen
                 //
-                NavigationLink(destination: ScreenViewLive(inputUrl: $inputUrlLive)) {
+                NavigationLink(destination: ScreenViewLive(inputUrl: $fullURL)) {
                                     Text("Embed - New Screen")
                 }.buttonStyle(.borderedProminent)
                 
@@ -279,6 +291,11 @@ struct ScreenView : View {
                 Button("Switch to Dev Mode") {
                     presentationMode.wrappedValue.dismiss()
                 }.buttonStyle(.borderedProminent)
+                
+                
+                VStack {
+                    Text("Full URL: \(fullURL)").font(.body)
+                }.padding(20)
             }.font(.title2).navigationBarTitle(Text("").font(.title3), displayMode: .inline)
                 .navigationBarHidden(true)
         }
