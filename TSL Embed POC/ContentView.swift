@@ -7,9 +7,9 @@
 import WebKit
 import SwiftUI
 
-let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&isEmbed=true&type=show&index=JyC00f6tVJv0&modus="
+let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&modus="
 let DEFAULT_EMBED_URL = EMBED_URL + "JyC00f6tVJv0"
-let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&&isEmbed=true&type=show&index=JyC00f6tVJv0&modus="
+let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&modus="
 let DEFAULT_EMBED_URL_LIVE = EMBED_URL_LIVE + "5Cn81MRw51ct"
 struct Webview: UIViewControllerRepresentable {
     var url: URL
@@ -156,13 +156,15 @@ struct ContentView: View {
         
         var body: some View {
             NavigationView {
-                VStack {
-                    // Dev Buttons
-                    Text("Dev Mode").padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
-                    TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
-                        fullURL = "\(EMBED_URL)\(showID.isEmpty ? "JyC00f6tVJv0" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
-                    }
-                    // Make sure no other style is mistakenly applied.
+                ScrollView {
+                    VStack {
+                        Spacer(minLength: 30)
+                        // Dev Buttons
+                        Text("Dev Mode").padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                        TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
+                            fullURL = "\(EMBED_URL)\(showID.isEmpty ? "JyC00f6tVJv0" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
+                        }
+                        // Make sure no other style is mistakenly applied.
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         // Text alignment.
                         .multilineTextAlignment(.leading)
@@ -173,50 +175,52 @@ struct ContentView: View {
                         .padding(.horizontal, 16)
                         // TextField border.
                         //.background(border)
-                    // Text(fullURL)
-                    //
-                    // 1). --> Modal
-                    //
-                    Button(action: {
-                        isShowingWebView = true
-                    })
-                    {
-                        Text("Embed - Modal")
-                    }
-                    .sheet(isPresented: $isShowingWebView) {
-                        // Open url
-                        Webview(url: URL(string: fullURL)!)
-                    }.buttonStyle(.borderedProminent)
-                    
-                    //
-                    // 2). --> Full Modal
-                    //
-                    Button("Embed - Full Modal") {
-                        showSheet = true
-                    }.fullScreenCover(isPresented: $showSheet) {
-                        SheetViewDev(inputUrl: $fullURL)
-                    }.buttonStyle(.borderedProminent)
-                    
-                    //
-                    // 3). --> New Screen
-                    //
-                    NavigationLink(destination: ScreenViewDev(inputUrl: $fullURL)) {
-                                        Text("Embed - New Screen")
-                    }.buttonStyle(.borderedProminent)
-                    
-                    
-                    Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
-                    
-                    NavigationLink(destination: ScreenView()) {
-                                        Text("Switch to Live Mode")
-                    }.buttonStyle(.borderedProminent)
-                    
-                    VStack {
-                        Text("Full URL: \(fullURL)").font(.body)
-                    }.padding(20)
-                }.font(.title2).navigationBarTitle(Text("TSL Embed POC").font(.title3), displayMode: .inline)
-                    .navigationBarHidden(false)
-            }
+                        // Text(fullURL)
+                        //
+                        // 1). --> Modal
+                        //
+                        Button(action: {
+                            isShowingWebView = true
+                        })
+                        {
+                            Text("Embed - Modal")
+                        }
+                        .sheet(isPresented: $isShowingWebView) {
+                            // Open url
+                            Webview(url: URL(string: fullURL)!)
+                        }.buttonStyle(.borderedProminent)
+                        
+                        //
+                        // 2). --> Full Modal
+                        //
+                        Button("Embed - Full Modal") {
+                            showSheet = true
+                        }.fullScreenCover(isPresented: $showSheet) {
+                            SheetViewDev(inputUrl: $fullURL)
+                        }.buttonStyle(.borderedProminent)
+                        
+                        //
+                        // 3). --> New Screen
+                        //
+                        NavigationLink(destination: ScreenViewDev(inputUrl: $fullURL)) {
+                            Text("Embed - New Screen")
+                        }.buttonStyle(.borderedProminent)
+                        
+                        
+                        Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                        
+                        NavigationLink(destination: ScreenView()) {
+                            Text("Switch to Live Mode")
+                        }.buttonStyle(.borderedProminent)
+                        
+                        VStack {
+                            Text("Full URL: \(fullURL)").font(.body)
+                        }.padding(20)
+                    }.font(.title2).navigationBarTitle(Text("TSL Embed POC").font(.title3), displayMode: .inline)
+                        .navigationBarHidden(false)
+                }
+            }.navigationViewStyle(StackNavigationViewStyle())
+                
         }
 }
 
@@ -252,7 +256,6 @@ struct SheetViewDev: View {
     @Binding var inputUrl: String
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
             ZStack {
                 // Open url
                 Webview(url: URL(string:inputUrl)!)
@@ -271,7 +274,6 @@ struct SheetViewDev: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             .padding(0)
-        }
     }
 }
 
@@ -285,14 +287,17 @@ struct ScreenView : View {
     
     @State var fullURL: String = DEFAULT_EMBED_URL_LIVE
     @State var showID: String = ""
-        var body: some View {
-            VStack {
-                Text("Live Mode").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
-
-                TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
-                    fullURL = "\(EMBED_URL_LIVE)\(showID.isEmpty ? "5Cn81MRw51ct" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
-                }
-                // Make sure no other style is mistakenly applied.
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack {
+                    Spacer(minLength: 30)
+                    Text("Live Mode").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                    
+                    TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
+                        fullURL = "\(EMBED_URL_LIVE)\(showID.isEmpty ? "5Cn81MRw51ct" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
+                    }
+                    // Make sure no other style is mistakenly applied.
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     // Text alignment.
                     .multilineTextAlignment(.leading)
@@ -303,62 +308,61 @@ struct ScreenView : View {
                     .padding(.horizontal, 16)
                     // TextField border.
                     //.background(border)
-                //
-                // 1). --> Modal
-                //
-                Button(action: {
-                    isShowingWebView = true
-                })
-                {
-                    Text("Embed - Modal")
-                }
-                .sheet(isPresented: $isShowingWebView) {
-                    // Open url
-                    Webview(url: URL(string: fullURL)!)
-                }.buttonStyle(.borderedProminent)
-                
-                //
-                // 2). --> Full Modal
-                //
-                Button("Embed - Full Modal") {
-                    showSheet = true
-                }.fullScreenCover(isPresented: $showSheet) {
-                    SheetView(inputUrlLive: $fullURL)
-                }.buttonStyle(.borderedProminent)
-                
-                //
-                // 3). --> New Screen
-                //
-                NavigationLink(destination: ScreenViewLive(inputUrl: $fullURL)) {
-                                    Text("Embed - New Screen")
-                }.buttonStyle(.borderedProminent)
-                
-                
-                Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
-                
-                Button("Switch to Dev Mode") {
-                    presentationMode.wrappedValue.dismiss()
-                }.buttonStyle(.borderedProminent)
-                
-                
-                VStack {
-                    Text("Full URL: \(fullURL)").font(.body)
-                }.padding(20)
-            }.font(.title2).navigationBarTitle(Text("").font(.title3), displayMode: .inline)
-                .navigationBarHidden(true)
-        }
+                    //
+                    // 1). --> Modal
+                    //
+                    Button(action: {
+                        isShowingWebView = true
+                    })
+                    {
+                        Text("Embed - Modal")
+                    }
+                    .sheet(isPresented: $isShowingWebView) {
+                        // Open url
+                        Webview(url: URL(string: fullURL)!)
+                    }.buttonStyle(.borderedProminent)
+                    
+                    //
+                    // 2). --> Full Modal
+                    //
+                    Button("Embed - Full Modal") {
+                        showSheet = true
+                    }.fullScreenCover(isPresented: $showSheet) {
+                        SheetView(inputUrlLive: $fullURL)
+                    }.buttonStyle(.borderedProminent)
+                    
+                    //
+                    // 3). --> New Screen
+                    //
+                    NavigationLink(destination: ScreenViewLive(inputUrl: $fullURL)) {
+                        Text("Embed - New Screen")
+                    }.buttonStyle(.borderedProminent)
+                    
+                    
+                    Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                    
+                    Button("Switch to Dev Mode") {
+                        presentationMode.wrappedValue.dismiss()
+                    }.buttonStyle(.borderedProminent)
+                    
+                    
+                    VStack {
+                        Text("Full URL: \(fullURL)").font(.body)
+                    }.padding(20)
+                }.font(.title2)
+            }
+        }.navigationBarTitle(Text(""))
+            .navigationBarHidden(true).navigationViewStyle(StackNavigationViewStyle())
     }
+}
 
 // New Screen Live
 struct ScreenViewLive : View {
     @Binding var inputUrl: String
         var body: some View {
-            NavigationView {
-                VStack {
-                    // Open url
-                    Webview(url: URL(string:inputUrl)!)
-                }.navigationBarTitle("")
-                .navigationBarHidden(true)
+            VStack {
+                // Open url
+                Webview(url: URL(string:inputUrl)!)
             }
         }
     }
@@ -367,12 +371,9 @@ struct ScreenViewLive : View {
 struct ScreenViewDev : View {
     @Binding var inputUrl: String
         var body: some View {
-            NavigationView {
-                VStack {
-                    // Open url
-                    Webview(url: URL(string:inputUrl)!)
-                }.navigationBarTitle("")
-                .navigationBarHidden(true)
+            VStack {
+                // Open url
+                Webview(url: URL(string:inputUrl)!)
             }
         }
     }
