@@ -7,9 +7,9 @@
 import WebKit
 import SwiftUI
 
-let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&type=show&index=JyC00f6tVJv0&modus="
+let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&isEmbed=true&type=show&index=JyC00f6tVJv0&modus="
 let DEFAULT_EMBED_URL = EMBED_URL + "JyC00f6tVJv0"
-let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&type=show&index=JyC00f6tVJv0&modus="
+let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&&isEmbed=true&type=show&index=JyC00f6tVJv0&modus="
 let DEFAULT_EMBED_URL_LIVE = EMBED_URL_LIVE + "5Cn81MRw51ct"
 struct Webview: UIViewControllerRepresentable {
     var url: URL
@@ -45,7 +45,9 @@ class WebviewController: UIViewController, WKNavigationDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.webview.uiDelegate = self
         self.webview.navigationDelegate = self
+        self.webview.allowsBackForwardNavigationGestures = true
         self.view.addSubview(self.webview)
 
         self.webview.frame = self.view.frame
@@ -64,6 +66,33 @@ class WebviewController: UIViewController, WKNavigationDelegate {
 
         self.progressbar.progress = 0.1
         webview.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
+        
+        guard let redirectURL = (navigationAction.request.url) else {
+            decisionHandler(.cancel)
+            return
+        }
+    
+        // let _ = print("URL ->", redirectURL)
+        if (redirectURL.absoluteString.contains("isEmbed=true")) {
+            // Allows opening in the webview
+            decisionHandler(.allow)
+        } else if (redirectURL.absoluteString.starts(with: "https://talkshop.live") ||
+                   redirectURL.absoluteString.starts(with: "https://dev-tvbdhuyxega.talkshop.live") ||
+                   redirectURL.absoluteString.starts(with: "https://publish.talkshop.live") ||
+                   redirectURL.absoluteString.starts(with: "https://support.talkshop.live") ||
+                   redirectURL.absoluteString.starts(with: "https://www.facebook.com") ||
+                   redirectURL.absoluteString.starts(with: "https://twitter.com") ||
+                   redirectURL.absoluteString.starts(with: "https://m.facebook.com")
+        ) {
+            // Opens up in safari
+            UIApplication.shared.open(redirectURL, options: [:], completionHandler: nil)
+            decisionHandler(.cancel)
+        } else {
+            decisionHandler(.cancel)
+        }
     }
 
     func setProgressBarPosition() {
@@ -100,6 +129,23 @@ class WebviewController: UIViewController, WKNavigationDelegate {
         }
     }
 }
+
+extension WebviewController: WKUIDelegate {
+
+    func webView(_ webview: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        
+        guard let url = navigationAction.request.url else {
+            return nil
+        }
+        
+        guard let targetFrame = navigationAction.targetFrame, targetFrame.isMainFrame else {
+            webview.load(URLRequest(url: url))
+            return nil
+        }
+        return nil
+    }
+}
+
 // vzzg6tNu0qOv
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -205,26 +251,28 @@ struct SheetViewDev: View {
  @Environment(\.presentationMode) var presentationMode
     @Binding var inputUrl: String
 
-  var body: some View {
-      ZStack {
-          // Open url
-          Webview(url: URL(string:inputUrl)!)
-          
-          Button {
-             presentationMode.wrappedValue.dismiss()
-           } label: {
-              Image(systemName: "xmark.circle")
-                   .font(.title)
-              .foregroundColor(.gray)
-              .background(.white)
-              .backgroundStyle(.brown)
-              .cornerRadius(100)
-              .position(x: 30, y: 0)
-           }
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            ZStack {
+                // Open url
+                Webview(url: URL(string:inputUrl)!)
+                
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Image(systemName: "xmark.circle")
+                        .font(.title)
+                        .foregroundColor(.gray)
+                        .background(.white)
+                        .backgroundStyle(.brown)
+                        .cornerRadius(100)
+                        .position(x: 30, y: 0)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            .padding(0)
+        }
     }
-     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-     .padding(0)
-  }
 }
 
 // HdLWbc0zNk54
