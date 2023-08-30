@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "tsl-webview-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/daman-talkshoplive/tsl-webview-sdk",
+      "state" : {
+        "branch" : "main",
+        "revision" : "eba4f2787f0c24710ad6b8482bb4c9f97dfe318b"
+      }
+    }
+  ],
+  "version" : 2
+}

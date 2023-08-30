@@ -6,10 +6,11 @@
 //
 import WebKit
 import SwiftUI
+import TSLWebview
 
-let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&modus="
+let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&autoplay=1&modus="
 let DEFAULT_EMBED_URL = EMBED_URL + "JyC00f6tVJv0"
-let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&modus="
+let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&autoplay=1&modus="
 let DEFAULT_EMBED_URL_LIVE = EMBED_URL_LIVE + "5Cn81MRw51ct"
 struct Webview: UIViewControllerRepresentable {
     var url: URL
@@ -149,6 +150,7 @@ extension WebviewController: WKUIDelegate {
 // vzzg6tNu0qOv
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
+    @State var index = 0
     @State var isShowingWebView: Bool = false
     @State var showSheet = false
     @State var fullURL: String = DEFAULT_EMBED_URL
@@ -160,62 +162,103 @@ struct ContentView: View {
                     VStack {
                         Spacer(minLength: 30)
                         // Dev Buttons
-                        Text("Dev Mode").padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
-                        TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
-                            fullURL = "\(EMBED_URL)\(showID.isEmpty ? "JyC00f6tVJv0" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
+                        Text("Dev Mode(Embed URL)").padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                        Spacer(minLength: 30)
+                        
+                        VStack {
+                            HStack {
+                                Text("Enter Show ID").font(.body)
+                                Spacer()
+                            }
+                            TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
+                                fullURL = "\(EMBED_URL)\(showID.isEmpty ? "JyC00f6tVJv0" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
+                            }.frame(height: 40).background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(Color.black, lineWidth: 1)
+                            )
                         }
-                        // Make sure no other style is mistakenly applied.
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        // Text alignment.
-                        .multilineTextAlignment(.leading)
-                        // Text/placeholder font.
-                        .font(.title3.weight(.medium))
-                        // TextField spacing.
                         .padding(.vertical, 12)
                         .padding(.horizontal, 16)
-                        // TextField border.
-                        //.background(border)
-                        // Text(fullURL)
-                        //
+                        
+                        
                         // 1). --> Modal
                         //
                         Button(action: {
                             isShowingWebView = true
                         })
                         {
-                            Text("Embed - Modal")
+                            Text("Modal")
                         }
                         .sheet(isPresented: $isShowingWebView) {
                             // Open url
                             Webview(url: URL(string: fullURL)!)
-                        }.buttonStyle(.borderedProminent)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .frame(width: 240)
+                        .padding(2)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                         
                         //
                         // 2). --> Full Modal
                         //
-                        Button("Embed - Full Modal") {
+                        Button("Full Modal") {
                             showSheet = true
                         }.fullScreenCover(isPresented: $showSheet) {
                             SheetViewDev(inputUrl: $fullURL)
-                        }.buttonStyle(.borderedProminent)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .frame(width: 240)
+                        .padding(2)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                         
                         //
                         // 3). --> New Screen
                         //
                         NavigationLink(destination: ScreenViewDev(inputUrl: $fullURL)) {
-                            Text("Embed - New Screen")
-                        }.buttonStyle(.borderedProminent)
+                            Text("New Screen")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .frame(width: 240)
+                        .padding(2)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                         
                         
                         Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
                         
-                        NavigationLink(destination: ScreenView()) {
-                            Text("Switch to Live Mode")
-                        }.buttonStyle(.borderedProminent)
+                        VStack {
+                            NavigationLink(destination: ScreenView()) {
+                                Text("Switch to Live Mode")
+                            }
+                            .frame(width: 240)
+                            .padding(.vertical, 10)
+                            .background(Color.black)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            
+                            NavigationLink(destination: TSLSDKView()) {
+                                Text("Switch to SDK Mode")
+                            }
+                            .frame(width: 240)
+                            .padding(.vertical, 10)
+                            .background(Color.yellow)
+                            .foregroundColor(.black)
+                            .cornerRadius(8)
+                        }
                         
                         VStack {
-                            Text("Full URL: \(fullURL)").font(.body)
-                        }.padding(20)
+                            HStack {
+                                Text("Full URL:").font(.body)
+                                Spacer()
+                            }
+                            Text("\(fullURL)").font(.body)
+                        }.padding(20).textSelection(.enabled)
                     }.font(.title2).navigationBarTitle(Text("TSL Embed POC").font(.title3), displayMode: .inline)
                         .navigationBarHidden(false)
                 }
@@ -292,22 +335,23 @@ struct ScreenView : View {
             ScrollView {
                 VStack {
                     Spacer(minLength: 30)
-                    Text("Live Mode").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
+                    Text("Live Mode(Embed URL)").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
                     
-                    TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
-                        fullURL = "\(EMBED_URL_LIVE)\(showID.isEmpty ? "5Cn81MRw51ct" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
-                    }
-                    // Make sure no other style is mistakenly applied.
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    // Text alignment.
-                    .multilineTextAlignment(.leading)
-                    // Text/placeholder font.
-                    .font(.title3.weight(.medium))
-                    // TextField spacing.
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 16)
-                    // TextField border.
-                    //.background(border)
+                    VStack {
+                        HStack {
+                            Text("Enter Show ID").font(.body)
+                            Spacer()
+                        }
+                        TextField("", text: $showID).onChange(of: showID) { newValue in
+                            fullURL = "\(EMBED_URL_LIVE)\(showID.isEmpty ? "5Cn81MRw51ct" : showID)&theme=\(colorScheme == .dark ? "dark" : "light")"
+                        }.frame(height: 40).background(
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
+                    }.textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 16)
+                   
                     //
                     // 1). --> Modal
                     //
@@ -315,40 +359,77 @@ struct ScreenView : View {
                         isShowingWebView = true
                     })
                     {
-                        Text("Embed - Modal")
+                        Text("Modal")
                     }
                     .sheet(isPresented: $isShowingWebView) {
                         // Open url
                         Webview(url: URL(string: fullURL)!)
-                    }.buttonStyle(.borderedProminent)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .frame(width: 240)
+                    .padding(2)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
                     
                     //
                     // 2). --> Full Modal
                     //
-                    Button("Embed - Full Modal") {
+                    Button("Full Modal") {
                         showSheet = true
                     }.fullScreenCover(isPresented: $showSheet) {
                         SheetView(inputUrlLive: $fullURL)
-                    }.buttonStyle(.borderedProminent)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .frame(width: 240)
+                    .padding(2)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
                     
                     //
                     // 3). --> New Screen
                     //
                     NavigationLink(destination: ScreenViewLive(inputUrl: $fullURL)) {
-                        Text("Embed - New Screen")
-                    }.buttonStyle(.borderedProminent)
+                        Text("New Screen")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .frame(width: 240)
+                    .padding(2)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
                     
                     
                     Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
                     
-                    Button("Switch to Dev Mode") {
-                        presentationMode.wrappedValue.dismiss()
-                    }.buttonStyle(.borderedProminent)
-                    
-                    
                     VStack {
-                        Text("Full URL: \(fullURL)").font(.body)
-                    }.padding(20)
+                        Button("Switch to Dev Mode") {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        .frame(width: 240)
+                        .padding(.vertical, 10)
+                        .background(Color.black)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        
+                        NavigationLink(destination: TSLSDKView()) {
+                            Text("Switch to SDK Mode")
+                        }
+                        .frame(width: 240)
+                        .padding(.vertical, 10)
+                        .background(Color.yellow)
+                        .foregroundColor(.black)
+                        .cornerRadius(8)
+                    }
+
+                    VStack {
+                        HStack {
+                            Text("Full URL:").font(.body)
+                            Spacer()
+                        }
+                        Text("\(fullURL)").font(.body)
+                    }.padding(20).textSelection(.enabled)
                 }.font(.title2)
             }
         }.navigationBarTitle(Text(""))

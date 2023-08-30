@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D117B1042A99C1F900DB19F1 /* temp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D117B1032A99C1F900DB19F1 /* temp.swift */; };
-		D117B1072A99C89100DB19F1 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D117B1062A99C89100DB19F1 /* DataModel.swift */; };
+		D117B10A2A9ED28C00DB19F1 /* TSLWebview in Frameworks */ = {isa = PBXBuildFile; productRef = D117B1092A9ED28C00DB19F1 /* TSLWebview */; };
+		D117B10E2A9EDDC500DB19F1 /* TSLSDKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D117B10D2A9EDDC500DB19F1 /* TSLSDKView.swift */; };
 		D1CDB0E22A7C763E0031B7D2 /* TSL_Embed_POCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CDB0E12A7C763E0031B7D2 /* TSL_Embed_POCApp.swift */; };
 		D1CDB0E42A7C763E0031B7D2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CDB0E32A7C763E0031B7D2 /* ContentView.swift */; };
 		D1CDB0E62A7C763F0031B7D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1CDB0E52A7C763F0031B7D2 /* Assets.xcassets */; };
@@ -16,7 +16,6 @@
 		D1CDB0F32A7C763F0031B7D2 /* TSL_Embed_POCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CDB0F22A7C763F0031B7D2 /* TSL_Embed_POCTests.swift */; };
 		D1CDB0FD2A7C763F0031B7D2 /* TSL_Embed_POCUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CDB0FC2A7C763F0031B7D2 /* TSL_Embed_POCUITests.swift */; };
 		D1CDB0FF2A7C763F0031B7D2 /* TSL_Embed_POCUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CDB0FE2A7C763F0031B7D2 /* TSL_Embed_POCUITestsLaunchTests.swift */; };
-		D1CDB10C2A7CC1F70031B7D2 /* embed.html in Resources */ = {isa = PBXBuildFile; fileRef = D1CDB10B2A7CC1F70031B7D2 /* embed.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,8 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D117B1032A99C1F900DB19F1 /* temp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = temp.swift; sourceTree = "<group>"; };
-		D117B1062A99C89100DB19F1 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
+		D117B10D2A9EDDC500DB19F1 /* TSLSDKView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSLSDKView.swift; sourceTree = "<group>"; };
 		D1CDB0DE2A7C763E0031B7D2 /* TSL Embed POC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TSL Embed POC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1CDB0E12A7C763E0031B7D2 /* TSL_Embed_POCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSL_Embed_POCApp.swift; sourceTree = "<group>"; };
 		D1CDB0E32A7C763E0031B7D2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -49,7 +47,6 @@
 		D1CDB0F82A7C763F0031B7D2 /* TSL Embed POCUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TSL Embed POCUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1CDB0FC2A7C763F0031B7D2 /* TSL_Embed_POCUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSL_Embed_POCUITests.swift; sourceTree = "<group>"; };
 		D1CDB0FE2A7C763F0031B7D2 /* TSL_Embed_POCUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSL_Embed_POCUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		D1CDB10B2A7CC1F70031B7D2 /* embed.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = embed.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D117B10A2A9ED28C00DB19F1 /* TSLWebview in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,15 +75,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D117B1052A99C86D00DB19F1 /* Temp */ = {
-			isa = PBXGroup;
-			children = (
-				D117B1032A99C1F900DB19F1 /* temp.swift */,
-				D117B1062A99C89100DB19F1 /* DataModel.swift */,
-			);
-			path = Temp;
-			sourceTree = "<group>";
-		};
 		D1CDB0D52A7C763E0031B7D2 = {
 			isa = PBXGroup;
 			children = (
@@ -109,12 +98,11 @@
 		D1CDB0E02A7C763E0031B7D2 /* TSL Embed POC */ = {
 			isa = PBXGroup;
 			children = (
-				D117B1052A99C86D00DB19F1 /* Temp */,
-				D1CDB10B2A7CC1F70031B7D2 /* embed.html */,
 				D1CDB0E12A7C763E0031B7D2 /* TSL_Embed_POCApp.swift */,
 				D1CDB0E32A7C763E0031B7D2 /* ContentView.swift */,
 				D1CDB0E52A7C763F0031B7D2 /* Assets.xcassets */,
 				D1CDB0E72A7C763F0031B7D2 /* Preview Content */,
+				D117B10D2A9EDDC500DB19F1 /* TSLSDKView.swift */,
 			);
 			path = "TSL Embed POC";
 			sourceTree = "<group>";
@@ -160,6 +148,9 @@
 			dependencies = (
 			);
 			name = "TSL Embed POC";
+			packageProductDependencies = (
+				D117B1092A9ED28C00DB19F1 /* TSLWebview */,
+			);
 			productName = "TSL Embed POC";
 			productReference = D1CDB0DE2A7C763E0031B7D2 /* TSL Embed POC.app */;
 			productType = "com.apple.product-type.application";
@@ -232,6 +223,9 @@
 				Base,
 			);
 			mainGroup = D1CDB0D52A7C763E0031B7D2;
+			packageReferences = (
+				D117B1082A9ED28C00DB19F1 /* XCRemoteSwiftPackageReference "tsl-webview-sdk" */,
+			);
 			productRefGroup = D1CDB0DF2A7C763E0031B7D2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -250,7 +244,6 @@
 			files = (
 				D1CDB0E92A7C763F0031B7D2 /* Preview Assets.xcassets in Resources */,
 				D1CDB0E62A7C763F0031B7D2 /* Assets.xcassets in Resources */,
-				D1CDB10C2A7CC1F70031B7D2 /* embed.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,10 +268,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D117B10E2A9EDDC500DB19F1 /* TSLSDKView.swift in Sources */,
 				D1CDB0E42A7C763E0031B7D2 /* ContentView.swift in Sources */,
-				D117B1072A99C89100DB19F1 /* DataModel.swift in Sources */,
 				D1CDB0E22A7C763E0031B7D2 /* TSL_Embed_POCApp.swift in Sources */,
-				D117B1042A99C1F900DB19F1 /* temp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -611,6 +603,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D117B1082A9ED28C00DB19F1 /* XCRemoteSwiftPackageReference "tsl-webview-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daman-talkshoplive/tsl-webview-sdk";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D117B1092A9ED28C00DB19F1 /* TSLWebview */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D117B1082A9ED28C00DB19F1 /* XCRemoteSwiftPackageReference "tsl-webview-sdk" */;
+			productName = TSLWebview;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D1CDB0D62A7C763E0031B7D2 /* Project object */;
 }
