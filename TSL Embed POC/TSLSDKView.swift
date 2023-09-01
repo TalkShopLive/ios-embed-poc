@@ -11,19 +11,22 @@ import TSLWebview
 struct TSLSDKView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.presentationMode) var presentationMode
-    @State var index = 0
-    @State var theme = "light"
+    @State var theme : String? = "light"
     @State var isShowingWebView: Bool = false
-    @State var showSheet = false
-    @State var fullURL: String = DEFAULT_EMBED_URL
     @State var showID: String = "5Cn81MRw51ct"
-    @State private var isDarkMode = false
-    @State private var autoPlay = false
-    
-    init () {
-        _theme = State(initialValue: colorScheme == .dark ? "dark" : "light")
-        _isDarkMode = State(initialValue: colorScheme == .dark)
-    }
+    @State var isDarkMode = false
+    @State var autoPlay : Bool = false
+    @State var shouldAutoPlay : Bool? = false
+    @State var expandChat : Bool = false
+    @State var expandChatValue : Bool? = false
+    @State var hideChat : Bool = false
+    @State var hideChatValue : Bool? = false
+    @State var singleVariantButtonText : String = "Add"
+    @State var singleVariantButtonTextValue : String? = "Add"
+    @State var singleVariantButtonIcon : String = "Plus"
+    @State var singleVariantButtonIconValue : String? = "Plus"
+    @State var multipleVariantButtonText : String = "Add"
+    @State var multipleVariantButtonTextValue : String? = "Add"
         
         var body: some View {
             NavigationView {
@@ -34,34 +37,109 @@ struct TSLSDKView: View {
                         Text("SDK Mode(Live)").padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
                         Spacer(minLength: 30)
                         
-                        VStack {
-                            HStack {
-                                Text("Enter Show ID").font(.body)
-                                Spacer()
+                        Group {
+                            VStack {
+                                HStack {
+                                    Text("Enter Show ID").font(.body)
+                                    Spacer()
+                                }
+                                TextField("", text: $showID).frame(height: 40).background(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(Color.black, lineWidth: 1)
+                                )
                             }
-                            TextField("Enter Show Id", text: $showID).onChange(of: showID) { newValue in
-                                fullURL = "\(EMBED_URL)\(showID.isEmpty ? "JyC00f6tVJv0" : showID)&theme=\(theme)"
-                            }.frame(height: 40).background(
-                                RoundedRectangle(cornerRadius: 4)
-                                    .stroke(Color.black, lineWidth: 1)
-                            )
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            
+                            //
+                            
+                            HStack {
+                                VStack {
+                                    HStack {
+                                        Text("Single Variant Button Text").font(.body)
+                                        Spacer()
+                                    }
+                                    TextField("", text: $singleVariantButtonText).frame(height: 40).background(
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .stroke(Color.black, lineWidth: 1)
+                                    )
+                                }
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .onChange(of: singleVariantButtonText) { newValue in
+                                    singleVariantButtonTextValue = singleVariantButtonText
+                                  }
+                                
+                                //
+                                Spacer(minLength: 10)
+
+                                VStack {
+                                    HStack {
+                                        Text("Single Variant Button Icon").font(.body)
+                                        Spacer()
+                                    }
+                                    TextField("", text: $singleVariantButtonIcon).frame(height: 40).background(
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .stroke(Color.black, lineWidth: 1)
+                                    )
+                                }
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .onChange(of: singleVariantButtonIcon) { newValue in
+                                    singleVariantButtonIconValue = singleVariantButtonIconValue
+                                  }
+                            }
                             
                             //
                             Spacer(minLength: 20)
-                            // Should autoPlay
-                            Toggle("Auto Play", isOn: $autoPlay)
                             
-                            //
-                            Spacer(minLength: 20)
-                            // Theme Selector
-                            Toggle("Dark Mode(Webview)", isOn: $isDarkMode)
-                                .onChange(of: isDarkMode) {  newValue in
-                                    theme = newValue ? "dark" : "light"
-                                            }
-                        }
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 16)
+                            VStack {
+                                HStack {
+                                    Text("Multiple Variant Button Text").font(.body)
+                                    Spacer()
+                                }
+                                TextField("", text: $multipleVariantButtonText).frame(height: 40).background(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(Color.black, lineWidth: 1)
+                                )
+                            }
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .onChange(of: multipleVariantButtonText) { newValue in
+                                multipleVariantButtonTextValue = multipleVariantButtonText
+                              }
+                            
+                            VStack {
+                                //
+                                Spacer(minLength: 20)
+                                // Theme Selector
+                                Toggle("Auto Play", isOn: $autoPlay)
+                                    .onChange(of: autoPlay) {  newValue in
+                                        shouldAutoPlay = newValue
+                                                }
+                                
+                                //
+                                Spacer(minLength: 20)
+                                // Theme Selector
+                                Toggle("Dark Mode(Webview)", isOn: $isDarkMode)
+                                    .onChange(of: isDarkMode) {  newValue in
+                                        theme = newValue ? "dark" : "light"
+                                                }
+                                
+                                //
+                                Spacer(minLength: 20)
+                                // Theme Selector
+                                Toggle("Auto Expand Chat", isOn: $expandChat)
+                                    .onChange(of: expandChat) {  newValue in
+                                        expandChatValue = newValue
+                                                }
+                                
+                                //
+                                Spacer(minLength: 20)
+                                // Theme Selector
+                                Toggle("Hide Chat", isOn: $hideChat)
+                                    .onChange(of: hideChat) {  newValue in
+                                        hideChatValue = newValue
+                                                }
+                            }
+                        }.padding(.horizontal, 16)
+                        
                         
                         // Spacer
                         Spacer(minLength: 40)
@@ -75,8 +153,7 @@ struct TSLSDKView: View {
                             Text("Modal")
                         }
                         .sheet(isPresented: $isShowingWebView) {
-                            // Open url
-                            TSLWebview(showID: $showID, theme: $theme, autoPlay: $autoPlay)
+                            TSLWebview(showID: $showID, theme: $theme, autoPlay: $shouldAutoPlay, expandChat: $expandChatValue, hideChat: $hideChatValue, singleVariantButtonText: $singleVariantButtonTextValue, singleVariantButtonIcon: $singleVariantButtonIconValue, multipleVariantButtonText: $multipleVariantButtonTextValue)
                         }
                         .buttonStyle(.borderedProminent)
                         .frame(width: 240)
@@ -88,7 +165,7 @@ struct TSLSDKView: View {
                         //
                         // 2). --> New Screen
                         //
-                        NavigationLink(destination: ScreenViewSDK(showID: $showID, theme: $theme, autoPlay: $autoPlay)) {
+                        NavigationLink(destination: ScreenViewSDK(showID: $showID, theme: $theme, autoPlay: $shouldAutoPlay, expandChat: $expandChatValue, hideChat: $hideChatValue, singleVariantButtonText: $singleVariantButtonTextValue, singleVariantButtonIcon: $singleVariantButtonIconValue, multipleVariantButtonText: $multipleVariantButtonTextValue)) {
                             Text("New Screen")
                         }
                         .buttonStyle(.borderedProminent)
@@ -98,7 +175,6 @@ struct TSLSDKView: View {
                         .foregroundColor(.white)
                         .cornerRadius(8)
                         
-                        
                         Text("").padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 0)).fontWeight(.bold)
                         
                         Button("Switch to URL Mode") {
@@ -106,9 +182,11 @@ struct TSLSDKView: View {
                         }
                         .frame(width: 240)
                         .padding(.vertical, 10)
-                        .background(Color.black)
-                        .foregroundColor(.white)
+                        .background(colorScheme != .dark ? .black : .white)
+                        .foregroundColor(colorScheme != .dark ? .white : .black)
                         .cornerRadius(8)
+                        
+                        Spacer(minLength: 100)
                         
                     }.font(.title2).navigationBarTitle(Text("TSL Embed POC").font(.title3), displayMode: .inline)
                         .navigationBarHidden(false)
@@ -122,12 +200,17 @@ struct TSLSDKView: View {
 // New Screen
 struct ScreenViewSDK : View {
     @Binding var showID: String
-    @Binding var theme: String
-    @Binding var autoPlay: Bool
+    @Binding var theme: String?
+    @Binding var autoPlay: Bool?
+    @Binding var expandChat: Bool?
+    @Binding var hideChat: Bool?
+    @Binding var singleVariantButtonText: String?
+    @Binding var singleVariantButtonIcon: String?
+    @Binding var multipleVariantButtonText: String?
         var body: some View {
             VStack {
                 // Open url
-                TSLWebview(showID: $showID, theme: $theme, autoPlay: $autoPlay)
+                TSLWebview(showID: $showID, theme: $theme, autoPlay: $autoPlay, expandChat: $expandChat, hideChat: $hideChat, singleVariantButtonText: $singleVariantButtonText, singleVariantButtonIcon: $singleVariantButtonIcon, multipleVariantButtonText: $multipleVariantButtonText)
             }
         }
     }

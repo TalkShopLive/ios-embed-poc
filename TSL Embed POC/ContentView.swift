@@ -8,9 +8,9 @@ import WebKit
 import SwiftUI
 import TSLWebview
 
-let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&autoplay=1&modus="
+let EMBED_URL = "https://publish-dev.talkshop.live/?v=1691163266&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&singleVariantButtonText=Add&modus="
 let DEFAULT_EMBED_URL = EMBED_URL + "JyC00f6tVJv0"
-let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&autoplay=1&modus="
+let EMBED_URL_LIVE = "https://publish.talkshop.live/?v=1691163266&&isEmbed=true&type=show&index=JyC00f6tVJv0&mobile=1&modus="
 let DEFAULT_EMBED_URL_LIVE = EMBED_URL_LIVE + "5Cn81MRw51ct"
 struct Webview: UIViewControllerRepresentable {
     var url: URL
@@ -30,12 +30,25 @@ struct Webview: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ webviewController: WebviewController, context: Context) {
+        let configuration = WKWebViewConfiguration()
+        configuration.allowsInlineMediaPlayback = true
         //
     }
 }
 
 class WebviewController: UIViewController, WKNavigationDelegate {
-    lazy var webview: WKWebView = WKWebView()
+    lazy var webviewConfiguration: WKWebViewConfiguration = {
+            let configuration = WKWebViewConfiguration()
+            configuration.allowsInlineMediaPlayback = true
+            return configuration
+        }()
+    lazy var webview: WKWebView = {
+            let webView = WKWebView(frame: .zero, configuration: webviewConfiguration)
+            webView.uiDelegate = self
+            webView.navigationDelegate = self
+            webView.allowsBackForwardNavigationGestures = true
+            return webView
+        }()
     lazy var progressbar: UIProgressView = UIProgressView()
 
     deinit {
@@ -238,8 +251,8 @@ struct ContentView: View {
                             }
                             .frame(width: 240)
                             .padding(.vertical, 10)
-                            .background(Color.black)
-                            .foregroundColor(.white)
+                            .background(colorScheme != .dark ? .black : .white)
+                            .foregroundColor(colorScheme != .dark ? .white : .black)
                             .cornerRadius(8)
                             
                             NavigationLink(destination: TSLSDKView()) {
@@ -409,8 +422,8 @@ struct ScreenView : View {
                         }
                         .frame(width: 240)
                         .padding(.vertical, 10)
-                        .background(Color.black)
-                        .foregroundColor(.white)
+                        .background(colorScheme != .dark ? .black : .white)
+                        .foregroundColor(colorScheme != .dark ? .white : .black)
                         .cornerRadius(8)
                         
                         NavigationLink(destination: TSLSDKView()) {
@@ -464,3 +477,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
