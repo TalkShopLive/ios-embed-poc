@@ -27,6 +27,8 @@ struct TSLSDKView: View {
     @State var singleVariantButtonIconValue : String? = "Plus"
     @State var multipleVariantButtonText : String = "Add"
     @State var multipleVariantButtonTextValue : String? = "Add"
+    @State var dnt : Bool = false
+    @State var dntValue : Bool? = false
         
         var body: some View {
             NavigationView {
@@ -137,6 +139,14 @@ struct TSLSDKView: View {
                                     .onChange(of: hideChat) {  newValue in
                                         hideChatValue = newValue
                                                 }
+                                
+                                //
+                                Spacer(minLength: 20)
+                                // Theme Selector
+                                Toggle("Do not track", isOn: $dnt)
+                                    .onChange(of: dnt) {  newValue in
+                                        dntValue = newValue
+                                                }
                             }
                         }.padding(.horizontal, 16)
                         
@@ -153,7 +163,7 @@ struct TSLSDKView: View {
                             Text("Modal")
                         }
                         .sheet(isPresented: $isShowingWebView) {
-                            TSLWebview(showID: $showID, theme: $theme, autoPlay: $shouldAutoPlay, expandChat: $expandChatValue, hideChat: $hideChatValue, singleVariantButtonText: $singleVariantButtonTextValue, singleVariantButtonIcon: $singleVariantButtonIconValue, multipleVariantButtonText: $multipleVariantButtonTextValue)
+                            TSLWebview(showID: $showID, theme: $theme, autoPlay: $shouldAutoPlay, expandChat: $expandChatValue, hideChat: $hideChatValue, singleVariantButtonText: $singleVariantButtonTextValue, singleVariantButtonIcon: $singleVariantButtonIconValue, multipleVariantButtonText: $multipleVariantButtonTextValue, dnt: $dntValue)
                         }
                         .buttonStyle(.borderedProminent)
                         .frame(width: 240)
@@ -165,7 +175,7 @@ struct TSLSDKView: View {
                         //
                         // 2). --> New Screen
                         //
-                        NavigationLink(destination: ScreenViewSDK(showID: $showID, theme: $theme, autoPlay: $shouldAutoPlay, expandChat: $expandChatValue, hideChat: $hideChatValue, singleVariantButtonText: $singleVariantButtonTextValue, singleVariantButtonIcon: $singleVariantButtonIconValue, multipleVariantButtonText: $multipleVariantButtonTextValue)) {
+                        NavigationLink(destination: ScreenViewSDK(showID: $showID, theme: $theme, autoPlay: $shouldAutoPlay, expandChat: $expandChatValue, hideChat: $hideChatValue, singleVariantButtonText: $singleVariantButtonTextValue, singleVariantButtonIcon: $singleVariantButtonIconValue, multipleVariantButtonText: $multipleVariantButtonTextValue, dnt: $dntValue)) {
                             Text("New Screen")
                         }
                         .buttonStyle(.borderedProminent)
@@ -207,10 +217,14 @@ struct ScreenViewSDK : View {
     @Binding var singleVariantButtonText: String?
     @Binding var singleVariantButtonIcon: String?
     @Binding var multipleVariantButtonText: String?
+    @Binding var dnt: Bool?
+
         var body: some View {
             VStack {
                 // Open url
-                TSLWebview(showID: $showID, theme: $theme, autoPlay: $autoPlay, expandChat: $expandChat, hideChat: $hideChat, singleVariantButtonText: $singleVariantButtonText, singleVariantButtonIcon: $singleVariantButtonIcon, multipleVariantButtonText: $multipleVariantButtonText)
+                TSLWebview(showID: $showID, theme: $theme, autoPlay: $autoPlay, expandChat: $expandChat, hideChat: $hideChat, singleVariantButtonText: $singleVariantButtonText, singleVariantButtonIcon: $singleVariantButtonIcon, multipleVariantButtonText: $multipleVariantButtonText,
+                    dnt: $dnt
+                )
             }
         }
     }

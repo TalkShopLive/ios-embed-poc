@@ -37,7 +37,6 @@
 
 /* Begin PBXFileReference section */
 		D117B10D2A9EDDC500DB19F1 /* TSLSDKView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSLSDKView.swift; sourceTree = "<group>"; };
-		D117B1102AA27A9000DB19F1 /* tsl-webview-sdk */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "tsl-webview-sdk"; path = "../tsl-webview-sdk"; sourceTree = "<group>"; };
 		D1CDB0DE2A7C763E0031B7D2 /* TSL Embed POC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TSL Embed POC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1CDB0E12A7C763E0031B7D2 /* TSL_Embed_POCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSL_Embed_POCApp.swift; sourceTree = "<group>"; };
 		D1CDB0E32A7C763E0031B7D2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -76,18 +75,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D117B10F2AA27A9000DB19F1 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				D117B1102AA27A9000DB19F1 /* tsl-webview-sdk */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 		D1CDB0D52A7C763E0031B7D2 = {
 			isa = PBXGroup;
 			children = (
-				D117B10F2AA27A9000DB19F1 /* Packages */,
 				D1CDB0E02A7C763E0031B7D2 /* TSL Embed POC */,
 				D1CDB0F12A7C763F0031B7D2 /* TSL Embed POCTests */,
 				D1CDB0FB2A7C763F0031B7D2 /* TSL Embed POCUITests */,
@@ -438,7 +428,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"TSL Embed POC/Preview Content\"";
 				DEVELOPMENT_TEAM = R4WACU9V9E;
 				ENABLE_PREVIEWS = YES;
@@ -471,7 +461,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"TSL Embed POC/Preview Content\"";
 				DEVELOPMENT_TEAM = R4WACU9V9E;
 				ENABLE_PREVIEWS = YES;
